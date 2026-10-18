@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#27105b" />
+  <title>Grade 5 • Scratch Music Mission</title>
+  <style>
+    :root{--ink:#281849;--muted:#6e6388;--purple:#672de0;--purple2:#8e57ff;--pink:#ff4ba3;--teal:#08bfa5;--yellow:#ffcb43;--scratch:#08a785;--event:#ffbf33;--surface:#fff;--shadow:0 18px 46px #37216f20}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:ui-rounded,"Trebuchet MS",Arial,sans-serif;color:var(--ink)}
+    body{background:radial-gradient(ellipse at 15% 5%,#fbdcf4 0,transparent 28%),radial-gradient(ellipse at 97% 20%,#bfe9ff 0,transparent 31%),linear-gradient(140deg,#f7f4ff 0%,#fffdf8 65%,#e9fff6 100%);padding:24px 22px 40px;overflow-x:hidden}
+    button{font:inherit;cursor:pointer}
+    button:focus-visible{outline:4px solid #fb9a20;outline-offset:3px}
+    .app{width:min(1140px,100%);margin:auto;position:relative}
+    .top{display:flex;align-items:center;gap:18px;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:14px}
+    .brand-icon{width:67px;height:67px;border-radius:22px;background:linear-gradient(145deg,#ffdf70,#ff72b0);display:grid;place-items:center;font-size:37px;transform:rotate(-7deg);box-shadow:0 8px 0 #ec9a4555}
+    h1{margin:0;font-size:clamp(26px,4.2vw,46px);line-height:1.06;letter-spacing:-.05em;color:#34166b}
+    .subtitle{font-size:16px;margin:7px 0 0;color:var(--muted);font-weight:700}
+    .top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .score{border-radius:19px;background:#fff;box-shadow:var(--shadow);padding:12px 18px;text-align:center;min-width:118px}
+    .score span{display:block;color:var(--muted);font-size:12px;font-weight:900;letter-spacing:.11em}
+    .score strong{display:block;font-size:29px;line-height:1.15;color:var(--purple);font-weight:1000}
+    .tiny{background:#fff;border:2px solid #dfd6f8;border-radius:16px;padding:13px 16px;font-weight:900;color:#493180;transition:transform .18s}
+    .tiny:hover{transform:translateY(-2px)}
+    .progress-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 18px}
+    .step{display:flex;align-items:center;justify-content:center;gap:9px;padding:14px 8px;border-radius:17px;background:#fff9;min-height:58px;color:#8c80a6;font-weight:900;border:2px solid #e9e4f4;font-size:clamp(11px,1.45vw,16px)}
+    .step.active{background:#eee5ff;color:#5530c1;border-color:#ae8dff}
+    .step.complete{background:#ddfff5;color:#027e69;border-color:#71d9ba}
+    .step .bubble{width:29px;height:29px;border-radius:50%;background:#eee9f8;display:grid;place-items:center;flex-shrink:0}
+    .step.active .bubble{background:#d3c3ff}.step.complete .bubble{background:#b0f1d8}
+    .game-card{background:var(--surface);border:2px solid #e9e1ff;border-radius:32px;box-shadow:var(--shadow);padding:clamp(20px,4vw,38px);min-height:495px;position:relative;overflow:hidden}
+    .game-card::before{content:'✦';position:absolute;right:26px;top:6px;font-size:64px;color:#ffe3f1;pointer-events:none}
+    .mission-tag{display:inline-flex;align-items:center;gap:7px;background:#fff0ca;color:#95600f;border-radius:999px;padding:9px 16px;font-size:13px;font-weight:1000;letter-spacing:.045em;text-transform:uppercase}
+    h2{font-size:clamp(27px,3.7vw,42px);letter-spacing:-.045em;line-height:1.13;margin:17px 0 10px;color:#2d165b}
+    .help{font-size:clamp(16px,1.7vw,20px);color:#665a7d;line-height:1.45;margin:0 0 24px;font-weight:700;max-width:720px}
+    .two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.8fr);gap:28px;align-items:center}
+    .choices{display:grid;gap:13px;margin:20px 0}
+    .choice{border:3px solid #e4ddf6;background:#faf8ff;border-radius:20px;text-align:left;display:flex;align-items:center;gap:15px;padding:18px 20px;font-weight:900;font-size:clamp(16px,1.9vw,21px);color:#40266d;min-height:74px;transition:transform .17s,border-color .17s,background .17s}
+    .choice:hover{transform:translateY(-2px);border-color:#b88cff;background:#f1e9ff}
+    .choice .choice-icon{font-size:31px}
+    .correct{background:#defbf1!important;border-color:#22b98a!important}
+    .wrong{background:#ffe5ef!important;border-color:#ff6f95!important}
+    .visual-card{background:linear-gradient(160deg,#efe7ff,#ffe7f3);border:3px dashed #c6a8ff;border-radius:26px;min-height:295px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative;isolation:isolate}
+    .visual-card:before,.visual-card:after{content:'♪';position:absolute;font-size:42px;color:#9c57f3}.visual-card:before{left:16px;top:28px;transform:rotate(-14deg)}.visual-card:after{content:'♫';right:20px;bottom:34px;transform:rotate(15deg)}
+    .visual-emoji{font-size:clamp(90px,11vw,138px);filter:drop-shadow(0 12px 0 #67419d22);animation:bop 2.5s ease-in-out infinite}
+    .visual-label{background:#fff;padding:10px 19px;border-radius:999px;font-size:16px;font-weight:1000;color:#673cc2;box-shadow:0 6px 15px #a280c433}
+    .feedback{border-radius:15px;padding:12px 16px;font-weight:900;min-height:49px;margin-top:10px;display:flex;align-items:center;gap:10px;max-width:760px}
+    .feedback.good{background:#dbffef;color:#06785f}.feedback.oops{background:#fff0ec;color:#aa3754}.feedback.info{background:#f0e9ff;color:#5431ad}
+    .primary{background:linear-gradient(100deg,#682de4,#a04dfa);border:none;border-radius:17px;padding:16px 26px;color:white;font-weight:1000;font-size:18px;box-shadow:0 8px 0 #4f1cb2;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:57px;transition:transform .17s; margin-top:16px}
+    .primary:hover{transform:translateY(-2px)}.primary:active{transform:translateY(3px);box-shadow:0 5px 0 #4f1cb2}
+    .primary:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}
+    .blocks-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+    .panel-label{font-size:14px;font-weight:1000;text-transform:uppercase;letter-spacing:.11em;color:#8a76af;margin:0 0 12px}
+    .code-panel{padding:24px;border-radius:24px;background:repeating-linear-gradient(0deg,#f7f2ff,#f7f2ff 31px,#eee6ff 32px);border:2px dashed #beabef;min-height:308px}
+    .block{position:relative;display:block;width:fit-content;max-width:100%;background:var(--scratch);color:white;padding:15px 18px 15px 25px;border-radius:12px;font-weight:900;line-height:1.4;font-size:clamp(14px,1.5vw,18px);margin-bottom:7px;box-shadow:0 5px 0 #06896e;word-break:break-word}
+    .block.event{background:#ffbd30;color:#563600;box-shadow:0 5px 0 #d78d00;border-radius:21px 21px 10px 10px}
+    .block.placeholder{background:#fefbff;border:3px dashed #c4b4e7;color:#907eae;box-shadow:none;min-height:55px;min-width:260px}
+    .block-button{display:block;width:100%;border:0;text-align:left;margin:0 0 13px;transition:filter .17s,transform .17s;cursor:pointer}
+    .block-button:hover{filter:brightness(1.08);transform:translateX(3px)}
+    .code-hint{color:#775b9e;font-size:15px;font-weight:800;margin-top:24px}
+    .meter{display:flex;align-items:center;gap:8px;margin:6px 0 22px}.meter-dot{width:20px;height:20px;border-radius:50%;background:#e6dcf8;border:2px solid #d5c5ef}.meter-dot.on{background:#1cc9a0;border-color:#0f9f81}
+    .play-row{display:flex;gap:15px;flex-wrap:wrap;align-items:center}
+    .band{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-top:22px}
+    .instrument{position:relative;min-height:204px;border:3px solid #dfd5f5;border-radius:23px;background:linear-gradient(165deg,#ffffff,#f7efff);padding:18px 8px;color:#432171;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:transform .15s,border-color .15s,background .15s;box-shadow:0 6px 0 #d7c2ed}
+    .instrument:hover{transform:translateY(-4px);border-color:#a36bff}
+    .instrument:active{transform:translateY(2px)}
+    .instrument.played{background:linear-gradient(150deg,#e1fff5,#f7fbff);border-color:#37cba0;box-shadow:0 6px 0 #78d9b6}
+    .instrument .emoji{font-size:clamp(48px,6vw,78px);line-height:1.2;display:block}
+    .instrument .name{font-size:clamp(16px,1.7vw,21px);font-weight:1000}
+    .instrument .key{font-size:13px;color:#84759a;font-weight:900}
+    .done-mark{position:absolute;right:10px;top:10px;background:#0bb98e;color:white;padding:5px 8px;font-size:13px;border-radius:999px;font-weight:1000}
+    .stage-strip{border-radius:18px;background:#f0e9ff;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;color:#6447a1;font-weight:900;margin-top:20px}
+    .count{font-size:19px;color:#4b20a4}
+    .winner{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:408px}
+    .winner .trophy{font-size:110px;animation:bop 2s ease-in-out infinite}
+    .winner h2{font-size:clamp(35px,5vw,58px)}
+    .winner p{font-size:20px;font-weight:800;color:var(--muted);margin:8px 0}
+    .winner .recap{background:#eafff6;padding:16px 28px;border-radius:17px;font-weight:1000;color:#008367;margin:12px 0 4px}
+    .foot{text-align:center;color:#9183a9;font-weight:800;font-size:13px;margin-top:17px}
+    .confetti{position:fixed;top:-30px;font-size:28px;pointer-events:none;z-index:10;animation:fall var(--duration,2.2s) ease-in forwards;left:var(--left,50%)}
+    .floater{position:fixed;z-index:11;pointer-events:none;font-size:32px;animation:float 1s ease-out forwards;top:var(--y,50%);left:var(--x,50%)}
+    @keyframes bop{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(5deg)}}
+    @keyframes float{0%{transform:translate(-50%,0) scale(.7);opacity:1}100%{transform:translate(-50%,-100px) scale(1.5);opacity:0}}
+    @keyframes fall{to{transform:translateY(105vh) rotate(700deg);opacity:0}}
+    @media(max-width:740px){body{padding:16px 12px 30px}.top{align-items:flex-start}.brand-icon{height:52px;width:52px;font-size:28px;border-radius:15px}.top-actions{width:100%;justify-content:space-between}.score{min-width:105px}.game-card{border-radius:24px;min-height:unset}.progress-steps{gap:5px}.step{gap:4px;flex-direction:column;padding:9px 4px;min-height:72px;text-align:center}.step .bubble{height:23px;width:23px}.two-col,.blocks-layout{grid-template-columns:1fr;gap:14px}.visual-card{min-height:170px}.visual-emoji{font-size:75px}.band{grid-template-columns:repeat(2,1fr);gap:13px}.instrument{min-height:165px}.instrument .emoji{font-size:62px}.code-panel{min-height:230px}.help{margin-bottom:14px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="top">
+      <div class="brand"><div class="brand-icon" aria-hidden="true">🎵</div><div><h1>Music Mission!</h1><p class="subtitle">Grade 5 · Scratch Music Extension</p></div></div>
+      <div class="top-actions">
+        <button class="tiny" id="soundBtn" type="button" aria-pressed="true">🔊 Sound ON</button>
+        <button class="tiny" id="resetBtn" type="button">↻ Restart</button>
+        <div class="score" aria-live="polite"><span>YOUR SCORE</span><strong id="scoreText">0 / 100</strong></div>
+      </div>
+    </header>
+    <nav class="progress-steps" aria-label="Game progress" id="stepNav"></nav>
+    <div class="game-card" id="game" aria-live="polite"></div>
+    <div class="foot">🎮 Tap the buttons to play · No login needed · Made for Grade 5</div>
+  </main>
+  <script>
+    'use strict';
+    const game = document.getElementById('game');
+    const stepNav = document.getElementById('stepNav');
+    const scoreText = document.getElementById('scoreText');
+    const soundBtn = document.getElementById('soundBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let stage=1, score=0, soundOn=true, answer='', buildStep=0, played=new Set(), noteMessage='';
+    let audioCtx;
+    const pieces = [
+      {id:'note', label:'♫ play note (60) for (0.25) beats', type:'music'},
+      {id:'event',label:'when this sprite clicked',type:'event'},
+      {id:'instrument',label:'♫ set instrument to (Guitar)',type:'music'}
+    ];
+    const correctSequence=['event','instrument','note'];
+    const instruments={
+      G:{name:'Guitar',emoji:'🎸',notes:[60,64,67,72],type:'guitar'},
+      P:{name:'Piano',emoji:'🎹',notes:[60,64,67,72],type:'piano'},
+      D:{name:'Drums',emoji:'🥁',notes:[38,42,38,42],type:'drums'},
+      S:{name:'Saxophone',emoji:'🎷',notes:[67,69,71,72],type:'sax'}
+    };
+
+    function updateHeader(){
+      scoreText.textContent=`${score} / 100`;
+      const steps=[['1','Music Extension'],['2','Scratch Blocks'],['3','Mini Band']];
+      stepNav.innerHTML=steps.map((s,i)=>{
+        const n=i+1;
+        return `<div class="step ${stage>n?'complete':stage===n?'active':''}" ${stage===n?'aria-current="step"':''}><span class="bubble">${stage>n?'✓':s[0]}</span><span>${s[1]}</span></div>`;
+      }).join('');
+    }
+    function feedback(message,type){return `<div class="feedback ${type}" role="status">${message}</div>`}
+    function render(){
+      updateHeader();
+      if(stage===1){
+        game.innerHTML=`<span class="mission-tag">⭐ Mission 1 of 3</span>
+        <div class="two-col"><div><h2>Which extension do we need?</h2><p class="help">In Scratch, we want our guitar sprite to play notes. Which extension should we add?</p>
+          <div class="choices">
+            <button class="choice ${answer==='music'?'correct':''}" data-action="answer" data-value="music"><span class="choice-icon">🎵</span> Music</button>
+            <button class="choice ${answer==='pen'?'wrong':''}" data-action="answer" data-value="pen"><span class="choice-icon">🖊️</span> Pen</button>
+            <button class="choice ${answer==='speech'?'wrong':''}" data-action="answer" data-value="speech"><span class="choice-icon">💬</span> Text to Speech</button>
+          </div>
+          ${answer==='music'?feedback('🌟 Correct! Music lets Scratch play musical notes.','good'):answer?feedback('Try again! Look for the extension that plays musical notes.','oops'):''}
+          ${answer==='music'?'<button class="primary" data-action="next">Next Mission →</button>':''}
+        </div><div class="visual-card"><span class="visual-emoji" aria-hidden="true">🎸</span><span class="visual-label">Make music with Scratch!</span></div></div>`;
+      } else if(stage===2){
+        game.innerHTML=`<span class="mission-tag">🧩 Mission 2 of 3</span><h2>Build the guitar code!</h2>
+          <p class="help">Tap the blocks in the correct order. Which block comes <strong>next</strong>?</p>
+          <div class="meter" aria-label="${buildStep} of 3 blocks correct">${[0,1,2].map(i=>`<span class="meter-dot ${i<buildStep?'on':''}"></span>`).join('')}<strong style="margin-left:6px">${buildStep} / 3 blocks</strong></div>
+          <div class="blocks-layout"><div><p class="panel-label">Your Scratch script</p><div class="code-panel">
+            ${correctSequence.slice(0,buildStep).map(id=>makeBlock(pieces.find(p=>p.id===id))).join('')}
+            ${buildStep<3?'<div class="block placeholder">+ Choose the next block</div>':''}
+            ${buildStep===3?'<div class="code-hint">✨ Your script is ready!</div>':''}
+          </div></div><div><p class="panel-label">Choose a block</p>
+          ${buildStep<3?pieces.filter(p=>!correctSequence.slice(0,buildStep).includes(p.id)).map(p=>`<button class="block block-button ${p.type}" data-action="block" data-value="${p.id}">${p.label}</button>`).join(''):'<div class="visual-card" style="min-height:200px"><span class="visual-emoji" style="font-size:80px">🎸</span><span class="visual-label">You built it!</span></div>'}
+          ${noteMessage?feedback(noteMessage,noteMessage.startsWith('✓')?'good':'oops'):''}
+          ${buildStep===3?'<div class="play-row"><button class="primary" data-action="test">▶ Test the Code</button><button class="primary" data-action="next" style="background:linear-gradient(100deg,#08bfa5,#27a5d7);box-shadow:0 8px 0 #087f83">Next Mission →</button></div>':''}
+          </div></div>`;
+      }else if(stage===3){
+        game.innerHTML=`<span class="mission-tag">🎶 Mission 3 of 3</span><h2>Start your mini band!</h2>
+          <p class="help">Click <strong>each instrument sprite</strong> to hear it play. You can also press <strong>G, P, D, S</strong> on your keyboard!</p>
+          <div class="band">${Object.entries(instruments).map(([key,item])=>`<button class="instrument ${played.has(key)?'played':''}" data-action="instrument" data-value="${key}" aria-label="Play ${item.name}">
+              ${played.has(key)?'<span class="done-mark">✓ Played</span>':''}<span class="emoji" aria-hidden="true">${item.emoji}</span><span class="name">${item.name}</span><span class="key">Press ${key}</span>
+            </button>`).join('')}</div>
+          <div class="stage-strip"><div>🎯 Play all 4 instrument sprites!</div><div class="count">${played.size} / 4 played</div></div>
+          ${noteMessage?feedback(noteMessage,'good'):''}
+          ${played.size===4?'<button class="primary" data-action="finish">🏆 See My Result</button>':''}`;
+      }else{
+        game.innerHTML=`<div class="winner"><div class="trophy" aria-hidden="true">🏆</div><span class="mission-tag">🌟 ALL MISSIONS COMPLETE!</span><h2>You are a Music Star!</h2>
+          <p>Fantastic work! You scored <strong style="color:#662cdb">${score} / 100</strong> points!</p>
+          <div class="recap">🎵 Music Extension + 🧩 Music Blocks + 🎸 Instrument Sprites</div>
+          <button class="primary" data-action="restart">↻ Play Again</button></div>`;
+      }
+    }
+    function makeBlock(piece){return `<div class="block ${piece.type}">${piece.label}</div>`;}
+    function shower(){
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+      for(let i=0;i<20;i++){
+        const el=document.createElement('span');el.className='confetti';el.textContent=['🎵','⭐','🎉','✨','🎶'][i%5];
+        el.style.setProperty('--left',`${Math.random()*100}vw`);el.style.setProperty('--duration',`${1.8+Math.random()*1.5}s`);
+        document.body.appendChild(el);setTimeout(()=>el.remove(),3500);
+      }
+    }
+    function floatingNote(rect){
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+      const el=document.createElement('span');el.className='floater';el.textContent='🎵';el.style.setProperty('--x',`${rect.left+rect.width/2}px`);el.style.setProperty('--y',`${rect.top+rect.height/2}px`);
+      document.body.appendChild(el);setTimeout(()=>el.remove(),1050);
+    }
+
+    // Offline-friendly synthesized sounds: no audio files, libraries, or network needed.
+    function getAudio(){
+      if(!soundOn)return null;
+      try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
+        if(!audioCtx)audioCtx=new C();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx;
+      }catch(e){return null;}
+    }
+    function tone(ctx,frequency,start,duration,type){
+      const osc=ctx.createOscillator();const gain=ctx.createGain();
+      osc.type=type==='guitar'?'triangle':type==='sax'?'sawtooth':'sine';osc.frequency.setValueAtTime(frequency,start);
+      const attack=type==='sax'?.055:.012,volume=type==='sax'?.12:.18;
+      gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(volume,start+attack);
+      gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
+      osc.connect(gain);gain.connect(ctx.destination);osc.start(start);osc.stop(start+duration+.03);
+      if(type==='piano'||type==='guitar'){
+        const high=ctx.createOscillator();const g2=ctx.createGain();high.type='triangle';high.frequency.value=frequency*2;
+        g2.gain.setValueAtTime(.0001,start);g2.gain.exponentialRampToValueAtTime(.04,start+.012);g2.gain.exponentialRampToValueAtTime(.0001,start+duration*.7);
+        high.connect(g2);g2.connect(ctx.destination);high.start(start);high.stop(start+duration+.03);
+      }
+    }
+    function drum(ctx,start,isHiHat){
+      const duration=isHiHat?.08:.2;
+      const len=Math.ceil(ctx.sampleRate*duration);const buffer=ctx.createBuffer(1,len,ctx.sampleRate);const values=buffer.getChannelData(0);
+      for(let i=0;i<len;i++)values[i]=(Math.random()*2-1)*Math.pow(1-i/len,isHiHat?3:1.8);
+      const noise=ctx.createBufferSource();noise.buffer=buffer;const gain=ctx.createGain();gain.gain.value=isHiHat?.18:.36;
+      const filter=ctx.createBiquadFilter();filter.type=isHiHat?'highpass':'lowpass';filter.frequency.value=isHiHat?4200:750;
+      noise.connect(filter);filter.connect(gain);gain.connect(ctx.destination);noise.start(start);
+      if(!isHiHat){const kick=ctx.createOscillator(),v=ctx.createGain();kick.type='sine';kick.frequency.setValueAtTime(140,start);kick.frequency.exponentialRampToValueAtTime(60,start+.16);
+        v.gain.setValueAtTime(.3,start);v.gain.exponentialRampToValueAtTime(.001,start+.17);kick.connect(v);v.connect(ctx.destination);kick.start(start);kick.stop(start+.19);}
+    }
+    function playSound(key){
+      const ctx=getAudio();if(!ctx)return;const item=instruments[key];const start=ctx.currentTime+.03;
+      for(let i=0;i<item.notes.length;i++){
+        const t=start+i*.24;
+        if(item.type==='drums')drum(ctx,t,i%2===1);
+        else tone(ctx,440*Math.pow(2,(item.notes[i]-69)/12),t,.21,item.type);
+      }
+    }
+    function restart(){stage=1;score=0;answer='';buildStep=0;played.clear();noteMessage='';render();}
+    function playInstrument(key,target){
+      if(!instruments[key]||stage!==3)return;
+      playSound(key);
+      if(target)floatingNote(target.getBoundingClientRect());
+      if(!played.has(key)){played.add(key);score+=10;noteMessage=`✓ Great! You played the ${instruments[key].name} sprite.`;if(played.size===4)shower();}
+      else noteMessage=`✓ That's the ${instruments[key].name}! Try a different one too.`;
+      render();
+    }
+    game.addEventListener('click',e=>{
+      const button=e.target.closest('button[data-action]');if(!button)return;
+      const action=button.dataset.action,value=button.dataset.value;
+      if(action==='answer'&&stage===1){if(answer==='music')return;answer=value;
+        if(value==='music'){score+=20;shower();}render();}
+      else if(action==='next'){if(stage===1&&answer==='music'||stage===2&&buildStep===3){stage++;noteMessage='';render();}}
+      else if(action==='block'&&stage===2){if(value===correctSequence[buildStep]){buildStep++;score+=10;noteMessage='✓ Correct block!';if(buildStep===3)shower();}
+        else noteMessage=buildStep===0?'Not yet! Start with the yellow Events block.':buildStep===1?'Try the block that chooses the instrument.':'Try the block that plays a note.';
+        render();}
+      else if(action==='test'&&stage===2){playSound('G');noteMessage='✓ Your guitar is playing!';render();}
+      else if(action==='instrument')playInstrument(value,button);
+      else if(action==='finish'&&stage===3&&played.size===4){score+=10;stage=4;shower();render();}
+      else if(action==='restart')restart();
+    });
+    document.addEventListener('keydown',e=>{
+      if(e.altKey||e.ctrlKey||e.metaKey||e.repeat||e.target.matches('input,textarea'))return;
+      const key=e.key.toUpperCase();if(stage===3&&instruments[key]){e.preventDefault();const card=game.querySelector(`[data-action="instrument"][data-value="${key}"]`);playInstrument(key,card);}
+    });
+    soundBtn.addEventListener('click',()=>{soundOn=!soundOn;soundBtn.textContent=soundOn?'🔊 Sound ON':'🔇 Sound OFF';soundBtn.setAttribute('aria-pressed',String(soundOn));});
+    resetBtn.addEventListener('click',restart);
+    render();
+  </script>
+</body>
+</html>
